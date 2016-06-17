@@ -3,6 +3,9 @@
             [clojure.java.io :as io]))
 
 
-(def parse-http (insta/parser (io/resource "http.abnf")))
+(def transforms
+  {:HEADER (fn [[_ name] [_ val]] [name val])
+   :HEADERS (fn [& args] [:HEADERS (into {} args)])})
 
+(def parse-http (insta/parser (io/resource "http.abnf")))
 
