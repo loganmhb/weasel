@@ -4,8 +4,13 @@
 
 
 (def transforms
-  {:HEADER (fn [[_ name] [_ val]] [name val])
-   :HEADERS (fn [& args] [:HEADERS (into {} args)])})
+  {:header (fn [[_ name] [_ val]] [name val])
+   :headers (fn [& args] [:headers (into {} args)])
+   :request (fn [& args] (into {} args))})
 
 (def parse-http (insta/parser (io/resource "http.abnf")))
+
+(defn parse-request [req]
+  (insta/transform transforms
+                   (parse-http req)))
 

@@ -1,15 +1,15 @@
-REQUEST = REQLINE HEADERS (* no body for now *)
+request = REQLINE headers (* no body for now *)
 
-<REQLINE> = REQ_TYPE <SP> PATH [<SP> <PROTOCOL>] <CRLF> (* we can assume HTTP/1.1 *)
+<REQLINE> = method <SP> path [<SP> <PROTOCOL>] <CRLF> (* we can assume HTTP/1.1 *)
 
-REQ_TYPE = "GET"                                    (* incomplete, of course *)
-PATH = "/"                                          (* obviously this needs to be expanded *)
+method = "GET"                                        (* incomplete, of course *)
+path = "/"                                            (* obviously this needs to be expanded *)
 SP = " "
 CRLF = "\n"
 PROTOCOL = "HTTP/1.1"
 
-HEADERS = {HEADER} <CRLF>
-HEADER = NAME <": "> VALUE <CRLF>
+headers = {header} <CRLF>
+header = NAME <": "> VALUE <CRLF>
 
 NAME = #"[a-zA-Z\-]+"
 VALUE = #"[^\n]*"

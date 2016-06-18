@@ -5,7 +5,6 @@
             [clojure.java.io :as io]))
 
 
-
 (defn read-request [client-sock]
   (with-open [input (io/reader client-sock)]))
 
