@@ -3,24 +3,14 @@
 (require '[clojure.java.io :as io]
          '[boot.cli :refer [defclifn]])
 
-(defn receive [socket]
-  (println "Waiting for message.")
-  (let [msg (.readLine (io/reader socket))]
-    (println "Read:" msg)
-    msg))
-
-(defn send-line [socket msg]
-  (println "Writing:" msg)
-  (doto (io/writer socket)
-    (.write msg)
-    (.flush)))
-
 (defn handle-connection [server-sock]
-  (with-open [sock (.accept server-sock)]
-    (loop [line (receive sock)]
-      (when line
-        (send-line sock line)
-        (recur (receive sock))))))
+  (with-open [sock (.accept server-sock)
+              in (.getInputStream sock)
+              out (.getOutputStream sock)]
+    (loop [b (.read in)]
+      (when (> b -1) ; sentinel value for end of stream
+        (.write out b)
+        (recur (.read in))))))
 
 (defclifn -main
   [p port VAL int "Port to echo on"]

@@ -1,0 +1,13 @@
+request = request-line headers
+
+<request-line> = method <sp> path <sp> [protocol] <crlf>
+method = "GET"                               (* incomplete *)
+path =  #"[/.~a-zA-Z0-9\-?&%]+"
+protocol = "HTTP/1.1"
+crlf = "\r\n"
+sp = " "
+
+headers = header* <crlf>
+header = name <": "> val <crlf>
+<name> = #"[^\:]*"
+<val> = #"[^\r]*"
