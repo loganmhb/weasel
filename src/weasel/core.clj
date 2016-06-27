@@ -42,7 +42,7 @@
     (let [request (read-http-request (.getInputStream client-sock))
           response (-> request
                        http/parse-request
-                       http/handler
+                       request-handler
                        http/format-response)]
       (with-open [output (io/writer client-sock)]
         (.write output response)
@@ -64,5 +64,5 @@
     (fn [] (reset! run false))))
 
 
-(def stop-server (start-server 9123 #(handle-http-client % http/handler)))
+(def stop-server (start-server 9123 #(handle-http-client % (http/file-handler "www"))))
 #_(stop-server)

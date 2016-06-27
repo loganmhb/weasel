@@ -33,10 +33,25 @@
        :headers (merge base-headers {"Content-Length" (count not-found-body)})
        :body not-found-body})))
 
+
+(defn file-handler [dir]
+  (fn [request]
+    (let [not-found "<h1>Not found :(</h1>"
+          base-headers {"Date" (tfmt/unparse (:rfc822 tfmt/formatters)
+                                             (time/now))
+                        "Server" "Weasel 0.1.0"
+                        "Content-Type" "text/html"
+                        "Connection" "close"}]
+      (if-let [path (io/resource (str dir (:path request)))]
+        {:status 200
+         :headers base-headers
+         :body (slurp path)}
+        {:status 404}))))
+
 (defn format-response-line [resp]
   (let [status-msgs {200 "OK"
                      404 "Not Found"}]
-    (str (:protocol resp) " "
+    (str (or (:protocol resp) "HTTP/1.1") " "
          (:status resp) " "
          (status-msgs (:status resp)) "\r\n")))
 
